@@ -15,8 +15,8 @@ export default function Header() {
     <header className="flex justify-between items-center my-10">
 
       <div className="flex items-center gap-x-2">
-        <Image src="./public/icons/logo.svg" alt="Logo" width={40} height={40} />
-        <Link className="font-bold text-3xl" href="/">
+        <Image src="/icons/logo.svg" alt="Logo" width={40} height={40} />
+        <Link className="font-bold text-3xl tracking-wide" href="/">
           NERD.
         </Link>
       </div>
