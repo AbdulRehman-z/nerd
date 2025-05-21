@@ -1,7 +1,11 @@
-export default function Page() {
+import BookList from "@/components/custom/booklist";
+import BookOverview from "@/components/custom/bookoverview";
+
+export default function Home() {
   return (
-    <div>
-      <h1>Hello, Nerd!</h1>
-    </div>
+    <>
+      <BookOverview />
+      <BookList />
+    </>
   )
 }
