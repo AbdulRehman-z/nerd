@@ -7,9 +7,9 @@ type Book = {
   total_copies: number,
   available_copies: number,
   description: string,
-  color: string,
-  coverUrl: string,
-  videoUrl: string,
+  color?: string,
+  cover: string,
+  video: string,
   summary: string,
   isLoanedBook?: boolean,
 }
