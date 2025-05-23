@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <>
       <BookOverview {...sampleBooks[0]} />
-      <BookList title="latest books" books={sampleBooks} containerClass="mt-28" />
+      <BookList title="Latest books" books={sampleBooks} containerClass="mt-28" />
     </>
   )
 }
