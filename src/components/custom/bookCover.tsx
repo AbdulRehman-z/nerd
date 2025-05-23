@@ -15,8 +15,8 @@ const variantStyles: Record<BookCoverVariant, string> = {
 
 type BookCoverProps = {
   className?: string;
-  variant: BookCoverVariant;
-  coverColor: string;
+  variant?: BookCoverVariant;
+  coverColor?: string;
   coverImage: string;
 }
 
