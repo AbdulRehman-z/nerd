@@ -1,11 +1,19 @@
 "use server"
 
 import { signIn } from "@/auth"
+import { rateLimit } from "@/lib/ratelimit"
 import { getUser } from "@/lib/utils"
 import { signInSchema } from "@/lib/validations"
+import { headers } from "next/headers"
+import { redirect } from "next/navigation"
 import { z } from "zod"
 
 export const signInAction = async (formData: z.infer<typeof signInSchema>) => {
+  const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1"
+  const { success } = await rateLimit.limit(ip)
+
+  if (!success) return redirect("/too-fast")
+
   const validatedForm = signInSchema.safeParse(formData)
   if (!validatedForm.success) {
     return {
@@ -15,15 +23,15 @@ export const signInAction = async (formData: z.infer<typeof signInSchema>) => {
   }
 
   const { email, password } = validatedForm.data
-  const existingUser = await getUser(email)
-  if (!existingUser) {
-    return {
-      success: false,
-      error: "Account not registered. Try register your account first"
-    }
-  }
 
   try {
+    const existingUser = await getUser(email)
+    if (!existingUser) {
+      return {
+        success: false,
+        error: "Account not registered. Try register your account first"
+      }
+    }
     const result = await signIn("credentials", {
       email,
       password,
