@@ -1,18 +1,20 @@
-import { z } from "zod";
-
-const envSchema = z.object({
-  NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY: z.string(),
-  IMAGEKIT_PRIVATE_KEY: z.string(),
-  NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT: z.string(),
-  NEXT_PUBLIC_API_ENDPOINT: z.string(),
-  NEXT_PUBLIC_PROD_API_ENDPOINT: z.string(),
-  DATABASE_URL: z.string(),
-  UPSTASH_REDIS_URL: z.string(),
-  UPSTASH_REDIS_TOKEN: z.string(),
-  AUTH_SECRET: z.string(),
-  QSTASH_URL: z.string(),
-  QSTASH_TOKEN: z.string(),
-  RESEND_TOKEN: z.string(),
-});
-
-export const env = envSchema.parse(process.env);
+export const config = {
+  env: {
+    nodeEnv: process.env.NODE_ENV!,
+    apiEndpoint: process.env.NEXT_PUBLIC_API_ENDPOINT!,
+    prodApiEndpoint: process.env.NEXT_PUBLIC_PROD_API_ENDPOINT!,
+    imagekit: {
+      publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!,
+      urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!,
+      privateKey: process.env.IMAGEKIT_PRIVATE_KEY!,
+    },
+    databaseUrl: process.env.DATABASE_URL!,
+    upstash: {
+      redisUrl: process.env.UPSTASH_REDIS_URL!,
+      redisToken: process.env.UPSTASH_REDIS_TOKEN!,
+      qstashUrl: process.env.QSTASH_URL!,
+      qstashToken: process.env.QSTASH_TOKEN!,
+    },
+    resendToken: process.env.RESEND_TOKEN!,
+  },
+};
