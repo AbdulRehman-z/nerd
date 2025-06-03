@@ -5,7 +5,8 @@ export const signUpSchema = z.object({
   email: z.string().email().nonempty("Email is required"),
   universityId: z.coerce.number(),
   universityCard: z.string().nonempty("University card is required"),
-  password: z.string().min(8, { message: "Min 8 characters" }).max(20, { message: "Max 20 characters" }).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/).nonempty("Password is required"),
+  // password: z.string().min(8, { message: "Min 8 characters" }).max(20, { message: "Max 20 characters" }).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/).nonempty("Password is required"),
+  password: z.string().min(4, { message: "Min 4 characters" }).nonempty("Password is required")
 })
 
 export const signInSchema = z.object({
