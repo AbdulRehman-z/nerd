@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DefaultValues, FieldValues, Path, useForm, UseFormReturn } from "react-hook-form";
+import { DefaultValues, FieldValues, Path, SubmitHandler, useForm, UseFormReturn } from "react-hook-form";
 import { ZodType } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,9 @@ import { Input } from "@/components/ui/input";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import Link from "next/link";
 import ImageUpload from "./imageUpload";
-
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 
 type AuthFormProps<T extends FieldValues> = {
@@ -29,6 +31,8 @@ type AuthFormProps<T extends FieldValues> = {
 
 
 export default function AuthForm<T extends FieldValues>({ type, schema, defaultValues, onSubmit }: AuthFormProps<T>) {
+  const [block, setBlock] = useState(false)
+  const router = useRouter()
   const isSignedIn = type === "SIGN_IN"
 
   const form: UseFormReturn<T> = useForm({
@@ -36,8 +40,26 @@ export default function AuthForm<T extends FieldValues>({ type, schema, defaultV
     defaultValues: defaultValues as DefaultValues<T>,
   })
 
-  const handleSubmit = async (data: T) => {
-    await onSubmit(data)
+  const submit: SubmitHandler<T> = async (data: T) => {
+    setBlock(true)
+    const result = await onSubmit(data)
+    if (result.success) {
+      toast("Success!", {
+        description: isSignedIn ? "You have successfully signed in." : "You have successfully signed up.",
+      })
+
+      if (isSignedIn) {
+        router.push("/")
+      } else {
+        router.push("/sign-in")
+      }
+
+    } else {
+      toast(`Error ${isSignedIn ? "signing in" : "signing up"}`, {
+        description: result.error ?? "An error occurred",
+      })
+    }
+    setBlock(false)
   }
 
   const handleUploadComplete = (url: string) => {
@@ -61,7 +83,7 @@ export default function AuthForm<T extends FieldValues>({ type, schema, defaultV
         {isSignedIn ? "Access the vast collection of books and resources." : "Please fill out all the fields and upload a valid university ID to gain access to the library."}
       </p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8  w-full">
+        <form onSubmit={form.handleSubmit(submit)} className="space-y-8  w-full">
           {Object.keys(defaultValues).map((field) => (
             <FormField
               key={field}
@@ -88,12 +110,12 @@ export default function AuthForm<T extends FieldValues>({ type, schema, defaultV
               )}
             />
           ))}
-          <Button type="submit" className="form-btn">{isSignedIn ? "Sign In" : "Sign up"}</Button>
+          <Button type="submit" disabled={block} className="form-btn">{block ? "Wait..." : isSignedIn ? "Sign In" : "Sign up"}</Button>
         </form>
       </Form>
       <p className="text-center text-base font-medium">
         {isSignedIn ? "New to NERD? " : "Already have an account? "}
-        <Link className="text-primary underline underline-offset-4" href={isSignedIn ? "/signup" : "/signin"}>
+        <Link className="text-primary underline underline-offset-4" href={isSignedIn ? "/sign-up" : "/sign-in"}>
           {isSignedIn ? "Create an account" : "Sign In"}
         </Link>
       </p>
