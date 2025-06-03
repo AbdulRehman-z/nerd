@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ReactNode } from "react";
+import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { auth } from "@/auth";
 
 
 const ibmPlexSans = localFont({
@@ -26,26 +29,31 @@ export const metadata: Metadata = {
   description: "An online library for GMK university nerds.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: ReactNode;
 }) {
+  const session = await auth()
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body
-        className={`${ibmPlexSans.className} ${bebasNeue.variable} antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+      <SessionProvider session={session}>
+        <body
+          className={`${ibmPlexSans.className} ${bebasNeue.variable} antialiased`}
         >
-          {children}
-        </ThemeProvider>
-      </body>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </body>
+      </SessionProvider>
     </html>
 
   );
