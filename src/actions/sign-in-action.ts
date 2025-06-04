@@ -1,9 +1,11 @@
 "use server"
 
 import { signIn } from "@/auth"
+import { config } from "@/lib/config"
 import { rateLimit } from "@/lib/ratelimit"
 import { getUser } from "@/lib/utils"
 import { signInSchema } from "@/lib/validations"
+import { workflowClient } from "@/lib/workflow"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { z } from "zod"
@@ -32,6 +34,16 @@ export const signInAction = async (formData: z.infer<typeof signInSchema>) => {
         error: "Account not registered. Try register your account first"
       }
     }
+
+    // await workflowClient.trigger({
+    //   url: `${config.env.apiEndpoint}/workflows/onboarding`,
+    //   body: {
+    //     email: email,
+    //     fullName: existingUser.fullName
+    //   }
+    // })
+
+
     const result = await signIn("credentials", {
       email,
       password,
