@@ -26,5 +26,11 @@ services:
       postgres:
         condition: service_healthy
 
+  # qstash:
+  #   image: public.ecr.aws/upstash/qstash:latest
+  #   command: "qstash dev"
+  #   ports:
+  #     - "8080:8080"
+
 volumes:
   db_data:
