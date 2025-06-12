@@ -2,6 +2,7 @@ import { config } from '@/lib/config';
 import { neon, neonConfig } from '@neondatabase/serverless';
 import { drizzle as DrizzleHttp } from 'drizzle-orm/neon-http';
 import * as usersSchema from "./schemas/user-schema"
+import * as booksSchema from "./schemas/book-schema"
 // @ts-ignore
 import ws from 'ws';
 
@@ -9,6 +10,7 @@ let connectionString = config.env.databaseUrl;
 // Combine all schemas into a single object
 const schema = {
   ...usersSchema,
+  ...booksSchema,
   // ...spread other schemas here
 };
 
@@ -45,5 +47,6 @@ export { schema };
 
 // Export specific tables/relations
 export const {
-  users
+  users,
+  books,
 } = schema;
