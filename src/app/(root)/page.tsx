@@ -1,12 +1,23 @@
+import { getBooks } from "@/actions/books/get-books";
 import BookList from "@/components/custom/booklist";
 import BookOverview from "@/components/custom/bookoverview";
-import { sampleBooks } from "@/constants";
 
-export default function Home() {
+export default async function Home() {
+  // after(async () => {
+  //   await populateBooks()
+  // })
+  const books = await getBooks()
+  if (!books.data) return <div>No books found</div>
+  if (books.error) return <div>Error fetching books</div>
+
   return (
     <>
-      <BookOverview {...sampleBooks[0]} />
-      <BookList title="Latest books" books={sampleBooks} containerClass="mt-28" />
+      {books.success && (
+        <>
+          <BookOverview />
+          <BookList title="Latest books" books={books.data} containerClass="mt-28" />
+        </>
+      )}
     </>
   )
 }
