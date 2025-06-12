@@ -4,6 +4,7 @@ import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 
 const pool = postgres(config.env.databaseUrl, { max: 1 })
+
 export const db = drizzle(pool)
 
 async function main() {
